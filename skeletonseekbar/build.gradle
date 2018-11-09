@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.mitsuraivan'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 27
+        versionCode 1
+        versionName "0.1.7"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.banhammerzzzz:MitsuraKotlinUtils:1.0.1'
+}
+repositories {
+    mavenCentral()
+}
