@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="MitsuraSeekBar">
+    <declare-styleable name="SkeletonSeekBar">
         <attr name="itemH" format="dimension" />
         <attr name="itemW" format="dimension" />
         <attr name="gravityY" format="float" />

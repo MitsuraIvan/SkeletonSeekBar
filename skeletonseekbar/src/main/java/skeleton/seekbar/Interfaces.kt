@@ -1,8 +1,8 @@
-package mitsura.skeleton.seekbar
+package skeleton.seekbar
 
 import android.graphics.Canvas
-import mitsura.skeleton.seekbar.entity.ValueWrapper
-import mitsuru.msb.view.MitsuraSeekBar
+import mitsuru.msb.view.SkeletonSeekBar
+import skeleton.seekbar.entity.ValueWrapper
 
 interface ISeekBarGestureListener {
     fun onSeekbarItemFocused(tag: String, value: Float)
@@ -21,6 +21,6 @@ interface ITaggable {
 interface IDragable : ITaggable {
     fun onUpdate(width: Int, height: Int)
     fun onDraw(canvas: Canvas)
-    fun attachTo(mitsuraSeekBar: MitsuraSeekBar)
+    fun attachTo(mitsuraSeekBar: SkeletonSeekBar)
     fun getDraggableValueWrapper(): ValueWrapper
 }

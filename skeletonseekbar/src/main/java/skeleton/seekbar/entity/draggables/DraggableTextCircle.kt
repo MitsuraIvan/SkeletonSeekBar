@@ -1,11 +1,11 @@
-package mitsura.skeleton.seekbar.entity.draggables
+package skeleton.seekbar.entity.draggables
 
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
-import mitsura.kotlin.utils.getRectForTextWith
-import mitsura.kotlin.utils.getTextBounds
+import skeleton.seekbar.getRectForTextWith
+import skeleton.seekbar.getTextBounds
 
 open class DraggableTextCircle(tag: String, percent: Float, color: Int, textColor: Int, val formatter: String = "%.0f") : DraggableCircle(tag, percent, color) {
 

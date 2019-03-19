@@ -1,8 +1,7 @@
-package mitsura.skeleton.seekbar.entity.draggables
+package skeleton.seekbar.entity.draggables
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import mitsura.skeleton.seekbar.entity.draggables.AbstractDraggable
 
 open class DraggableCircle(tag: String, percent: Float, val color: Int) : AbstractDraggable(tag, percent) {
 

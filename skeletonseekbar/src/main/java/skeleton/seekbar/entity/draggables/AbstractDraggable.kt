@@ -1,18 +1,18 @@
-package mitsura.skeleton.seekbar.entity.draggables
+package skeleton.seekbar.entity.draggables
 
 import android.graphics.Rect
-import mitsura.skeleton.seekbar.IDragable
-import mitsura.skeleton.seekbar.entity.ValueWrapper
-import mitsuru.msb.view.MitsuraSeekBar
+import mitsuru.msb.view.SkeletonSeekBar
+import skeleton.seekbar.IDragable
+import skeleton.seekbar.entity.ValueWrapper
 
 
 abstract class AbstractDraggable(private val mTag: String, private val initPosPercent: Float) : IDragable {
 
     val value = ValueWrapper()
-    protected lateinit var seekbar: MitsuraSeekBar
+    protected lateinit var seekbar: SkeletonSeekBar
     protected val rect: Rect = Rect()
 
-    override fun attachTo(mitsuraSeekBar: MitsuraSeekBar) {
+    override fun attachTo(mitsuraSeekBar: SkeletonSeekBar) {
         seekbar = mitsuraSeekBar
         value.value = (seekbar.attributes.max - seekbar.attributes.min) * initPosPercent + seekbar.attributes.min
     }

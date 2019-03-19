@@ -5,21 +5,17 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import mitsura.kotlin.utils.DpToPx
-import mitsura.kotlin.utils.findClosestTo
-import mitsura.skeleton.seekbar.IDragable
-import mitsura.skeleton.seekbar.ISeekBarChangeListener
-import mitsura.skeleton.seekbar.ISeekBarGestureListener
-import mitsura.skeleton.seekbar.entity.MitsuraSeekBarAttrs
+import skeleton.seekbar.*
+import skeleton.seekbar.entity.SkeletonSeekBarAttrs
 import java.util.*
 
 /**
  * Created by ivanm on 3/11/2018.
  */
 
-class MitsuraSeekBar(context: Context, attrs: AttributeSet) : View(context, attrs), View.OnTouchListener {
+class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, attrs), View.OnTouchListener {
 
-    val attributes: MitsuraSeekBarAttrs = MitsuraSeekBarAttrs(context, attrs)
+    val attributes: SkeletonSeekBarAttrs = SkeletonSeekBarAttrs(context, attrs)
     var iSeekBarGestureListener: ISeekBarGestureListener? = null
     var iSeekBarChangeListener: ISeekBarChangeListener? = null
     private val itemsList = ArrayList<IDragable>()
