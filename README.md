@@ -1,14 +1,14 @@
-## Mitsura's seekBar lib
+## Skeleton seekBar lib
 
-This is the seekbar I was creating due to unflexiblility of other solutions available. Writen on kotlin, you can use it on java as well. 
+This is the seekbar I was creating due to unflexiblility of other solutions available. Writen on kotlin, you can use it on java as well.
 
-# MitsuraSeekBar
+# SkeletonSeekBar
 
 This is an :View item that controlling 'Sliders' objects inside itself.
 
 
 ```java
- <mitsuru.msb.view.MitsuraSeekBar
+ <mitsuru.msb.view.SkeletonSeekBar
                 android:id="@+id/msb"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
@@ -33,7 +33,7 @@ the available params atm are:
      max: Float// max seekbar value, default- 100
      step: Float// distance between slider going onto next value, default- 1. Float value
      draggableDifference// Float, max distance between two sliders inside seekbar. default- 0
-     
+
 ```
 
 # Draggable slider
@@ -42,22 +42,22 @@ There are 3 types of dragables available from the box:
 1. Bitmap, which allow you to show bitmap as slider
 2. circle
 3. numeric circle with number inside.
- 
+
 ```java
 DraggableBitmap(
-              val bitmap: Bitmap, 
-              viewTag: String, 
+              val bitmap: Bitmap,
+              viewTag: String,
               percent: Float) : AbstractDraggable(viewTag, percent)
 DraggableCircle(
-              tag: String, 
-              percent: Float, 
+              tag: String,
+              percent: Float,
               val color: Int) : AbstractDraggable(tag, percent)
 DraggableTextCircle(
-              tag: String, 
-              percent: Float, 
-              color: Int, 
-              textColor: Int, 
-              val formatter: String = "%.0f") : DraggableCircle(tag, percent, color) 
+              tag: String,
+              percent: Float,
+              color: Int,
+              textColor: Int,
+              val formatter: String = "%.0f") : DraggableCircle(tag, percent, color)
 ```
 
 each takes corresponding resourses to work(Bitmap, color etc)+ tag+ start position as percent of seekbars width. By those tags you will be able to undertand what slider is moving right now and how to respond
@@ -65,7 +65,7 @@ each takes corresponding resourses to work(Bitmap, color etc)+ tag+ start positi
 example
 
 ```java
-        val seekBar = findViewById<MitsuraSeekBar>(R.id.msb)
+        val seekBar = findViewById<SkeletonSeekBar>(R.id.msb)
         seekBar.addSlider(DraggableBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lego), "one", 0f))
         seekBar.addSlider(DraggableBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.lego), "two", 0.5f))
         seekBar.addSlider(DraggableTextCircle("three", 1f, Color.RED, Color.BLACK))
@@ -89,7 +89,7 @@ also selfexpl, example in half java style
         }
         seekBar.iSeekBarGestureListener= object : ISeekBarGestureListener{
             override fun onSeekbarItemFocused(tag: String, value: Float) {
-                
+
             }
 
             override fun onSeekbarItemMoved(tag: String, value: Float) {
