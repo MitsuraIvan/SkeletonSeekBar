@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import skeleton.seekbar.*
 import skeleton.seekbar.entity.SkeletonSeekBarAttrs
+import skeleton.seekbar.entity.draggables.SLIDER_GESTURE
 import java.util.*
 
 /**
@@ -17,8 +18,6 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
     View.OnTouchListener {
 
     val attributes: SkeletonSeekBarAttrs = SkeletonSeekBarAttrs(context, attrs)
-    var iSeekBarGestureListener: ISeekBarGestureListener? = null
-    var iSeekBarChangeListener: ISeekBarChangeListener? = null
     private val itemsList = ArrayList<IDragable>()
 
     private var focusedDraggable: IDragable? = null
@@ -29,37 +28,40 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
     init {
         setOnTouchListener(this)
         minimumHeight = 30.DpToPx()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         if (!attributes.respectMarginToDrawInsideContainer) this.setAllParentsClip(true)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         lineY = h * attributes.gravityY
-        margin = if (attributes.respectMarginToDrawInsideContainer) {
-            attributes.itemW * 0.6f
-        } else {
-            0f
-        }
+        margin = attributes.itemW * 0.4f
         invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        //unactive line drawing
         canvas.drawLine(
-            margin,
+            0f,
             lineY,
-            width - margin,
+            width.toFloat(),
             lineY, attributes.colorLineBg
         )
 
+        //active line drawing
         when (itemsList.size) {
             0 -> {                //do nothing
             }
             1 -> {
                 val coordinate = valueToCoordinate(itemsList[0].getDraggableValueWrapper().value)
+                val x1 = if (attributes.respectMarginToDrawInsideContainer) margin else 0f
                 canvas.drawLine(
-                    margin,
+                    x1,
                     lineY,
                     coordinate,
                     lineY, attributes.colorLineActive
@@ -119,44 +121,35 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
                     it.getDraggableValueWrapper().value
                 }
                 val focusedDraggable = focusedDraggable ?: return true
-                focusedDraggable.onMotionEvent(event)
                 //change focused value
                 moveItemTo(focusedDraggable, coordinateToValue(event.x))
-                iSeekBarGestureListener?.onSeekbarItemFocused(
-                    focusedDraggable.getTag(),
-                    focusedDraggable.getDraggableValueWrapper().value
-                )
-                iSeekBarChangeListener?.onSeekBarValueChange(
-                    focusedDraggable.getTag(),
-                    focusedDraggable.getDraggableValueWrapper().value
-                )
                 invalidate()
+                focusedDraggable.iSeekBarChangeListener(focusedDraggable, SLIDER_GESTURE.FOCUSED)
             }
             focusedDraggable != null && event.action == MotionEvent.ACTION_MOVE -> {
                 val focusedDraggable = focusedDraggable ?: return true
-                focusedDraggable.onMotionEvent(event)
                 moveItemTo(focusedDraggable, coordinateToValue(event.x))
-                iSeekBarGestureListener?.onSeekbarItemMoved(
-                    focusedDraggable.getTag(),
-                    focusedDraggable.getDraggableValueWrapper().value
-                )
-                iSeekBarChangeListener?.onSeekBarValueChange(
-                    focusedDraggable.getTag(),
-                    focusedDraggable.getDraggableValueWrapper().value
-                )
                 invalidate()
+                focusedDraggable.iSeekBarChangeListener(focusedDraggable, SLIDER_GESTURE.MOVED)
             }
             focusedDraggable != null && event.action == MotionEvent.ACTION_UP -> {
                 val focusedDraggable = focusedDraggable ?: return true
-                focusedDraggable.onMotionEvent(event)
-                iSeekBarGestureListener?.onSeekbarItemReleased(
-                    focusedDraggable.getTag(),
-                    focusedDraggable.getDraggableValueWrapper().value
-                )
-                iSeekBarChangeListener?.onSeekBarValueChange(
-                    focusedDraggable.getTag(),
-                    focusedDraggable.getDraggableValueWrapper().value
-                )
+                if (focusedDraggable.isSticky) {
+                    val currentValue = focusedDraggable.getDraggableValueWrapper().value
+                    val step = attributes.step
+
+                    val lost = currentValue % step
+                    moveItemTo(
+                        focusedDraggable,
+                        if (lost < step / 2f) {
+                            currentValue - lost
+                        } else {
+                            currentValue - lost + step
+                        }
+                    )
+                    invalidate()
+                }
+                focusedDraggable.iSeekBarChangeListener(focusedDraggable, SLIDER_GESTURE.RELEASED)
                 this.focusedDraggable = null
                 return false
             }

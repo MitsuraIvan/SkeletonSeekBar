@@ -1,14 +1,18 @@
 package skeleton.seekbar.entity.draggables
 
 import android.graphics.Rect
-import android.view.MotionEvent
 import mitsuru.msb.view.SkeletonSeekBar
 import skeleton.seekbar.IDragable
 import skeleton.seekbar.entity.ValueWrapper
 
+enum class SLIDER_GESTURE { FOCUSED, MOVED, RELEASED }
 
-abstract class AbstractDraggable(private val mTag: String, private val initPosPercent: Float) :
-    IDragable {
+abstract class AbstractDraggable(
+    private val mTag: String,
+    private val initPosPercent: Float,
+    override val isSticky: Boolean,
+    override var iSeekBarChangeListener: ((IDragable, SLIDER_GESTURE) -> Unit)
+) : IDragable {
 
     val value = ValueWrapper()
     protected lateinit var seekbar: SkeletonSeekBar
@@ -31,6 +35,4 @@ abstract class AbstractDraggable(private val mTag: String, private val initPosPe
     override fun getTag(): String = mTag
 
     override fun getDraggableValueWrapper(): ValueWrapper = value
-
-    override fun onMotionEvent(event: MotionEvent) {}
 }

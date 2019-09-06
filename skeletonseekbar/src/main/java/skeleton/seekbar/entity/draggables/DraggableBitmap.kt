@@ -3,9 +3,15 @@ package skeleton.seekbar.entity.draggables
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
+import skeleton.seekbar.IDragable
 
-open class DraggableBitmap(val bitmap: Bitmap, viewTag: String, percent: Float) :
-    AbstractDraggable(viewTag, percent) {
+open class DraggableBitmap(
+    val bitmap: Bitmap,
+    viewTag: String,
+    percent: Float,
+    sticky: Boolean = false,
+    iSeekBarChangeListener: ((IDragable, SLIDER_GESTURE) -> Unit)  = { _, _ -> }
+) : AbstractDraggable(viewTag, percent, sticky, iSeekBarChangeListener) {
 
     val bitmapW = bitmap.width
     val bitmapH = bitmap.height

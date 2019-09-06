@@ -2,8 +2,16 @@ package skeleton.seekbar.entity.draggables
 
 import android.graphics.Canvas
 import android.graphics.Paint
+import skeleton.seekbar.IDragable
 
-open class DraggableCircle(tag: String, percent: Float, val color: Int) : AbstractDraggable(tag, percent) {
+open class DraggableCircle(
+    tag: String,
+    percent: Float,
+    color: Int,
+    sticky: Boolean = false,
+    iSeekBarChangeListener: ((IDragable, SLIDER_GESTURE) -> Unit) = { _, _ -> }
+) :
+    AbstractDraggable(tag, percent, sticky, iSeekBarChangeListener) {
 
     val paint = Paint()
 
@@ -12,9 +20,11 @@ open class DraggableCircle(tag: String, percent: Float, val color: Int) : Abstra
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawCircle(rect.centerX().toFloat(),
-                rect.centerY().toFloat(),
-                (rect.width() / 2).toFloat(),
-                paint)
+        canvas.drawCircle(
+            rect.centerX().toFloat(),
+            rect.centerY().toFloat(),
+            (rect.width() / 2).toFloat(),
+            paint
+        )
     }
 }
