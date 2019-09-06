@@ -3,6 +3,8 @@ package skeleton.seekbar
 import android.content.res.Resources
 import android.graphics.Paint
 import android.graphics.Rect
+import android.view.View
+import android.view.ViewGroup
 
 fun Paint.getRectForTextWith(text: String, width: Float, height: Float, shrinkCoef: Float = 0.8f): Rect {
     val rect = Rect()
@@ -54,4 +56,13 @@ fun <T> List<T>.findClosestTo(value: Float, predicate: (T) -> Float): T? {
         }
     }
     return null
+}
+
+fun View.setAllParentsClip(enabled: Boolean) {
+    var parent = parent
+    while (parent is ViewGroup) {
+        parent.clipChildren = enabled
+        parent.clipToPadding = enabled
+        parent = parent.parent
+    }
 }

@@ -33,6 +33,7 @@ the available params atm are:
      max: Float// max seekbar value, default- 100
      step: Float// distance between slider going onto next value, default- 1. Float value
      draggableDifference// Float, max distance between two sliders inside seekbar. default- 0
+	respectRequiredMargin// Boolean, if this is set to true, seekbar will add margin left and right to draw everything fine inside container(seekbar itself). If false- there will be no margin, line will take all X distance and sliders will be drawn outside of the seekbar container on seekbar parent and seekbar neibors
 
 ```
 

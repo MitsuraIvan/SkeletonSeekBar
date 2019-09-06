@@ -1,6 +1,7 @@
 package skeleton.seekbar
 
 import android.graphics.Canvas
+import android.view.MotionEvent
 import mitsuru.msb.view.SkeletonSeekBar
 import skeleton.seekbar.entity.ValueWrapper
 
@@ -23,4 +24,5 @@ interface IDragable : ITaggable {
     fun onDraw(canvas: Canvas)
     fun attachTo(mitsuraSeekBar: SkeletonSeekBar)
     fun getDraggableValueWrapper(): ValueWrapper
+    fun onMotionEvent(event: MotionEvent)
 }

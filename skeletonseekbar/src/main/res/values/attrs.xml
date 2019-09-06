@@ -11,5 +11,6 @@
         <attr name="max" format="float" />
         <attr name="step" format="float" />
         <attr name="draggableDifference" format="float" />
+        <attr name="respectRequiredMargin" format="boolean" />
     </declare-styleable>
 </resources>

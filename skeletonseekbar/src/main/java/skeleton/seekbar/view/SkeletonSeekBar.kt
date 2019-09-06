@@ -13,7 +13,8 @@ import java.util.*
  * Created by ivanm on 3/11/2018.
  */
 
-class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, attrs), View.OnTouchListener {
+class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, attrs),
+    View.OnTouchListener {
 
     val attributes: SkeletonSeekBarAttrs = SkeletonSeekBarAttrs(context, attrs)
     var iSeekBarGestureListener: ISeekBarGestureListener? = null
@@ -28,42 +29,55 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
     init {
         setOnTouchListener(this)
         minimumHeight = 30.DpToPx()
+        if (!attributes.respectMarginToDrawInsideContainer) this.setAllParentsClip(true)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         lineY = h * attributes.gravityY
-        margin = attributes.itemW / 2f
+        margin = if (attributes.respectMarginToDrawInsideContainer) {
+            attributes.itemW * 0.6f
+        } else {
+            0f
+        }
         invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.drawLine(margin,
-                lineY,
-                width - margin,
-                lineY, attributes.colorLineBg)
+        canvas.drawLine(
+            margin,
+            lineY,
+            width - margin,
+            lineY, attributes.colorLineBg
+        )
 
         when (itemsList.size) {
             0 -> {                //do nothing
             }
             1 -> {
                 val coordinate = valueToCoordinate(itemsList[0].getDraggableValueWrapper().value)
-                canvas.drawLine(margin,
-                        lineY,
-                        coordinate,
-                        lineY, attributes.colorLineActive)
+                canvas.drawLine(
+                    margin,
+                    lineY,
+                    coordinate,
+                    lineY, attributes.colorLineActive
+                )
             }
             else -> {
                 itemsList.forEachIndexed { index, iDragable ->
                     if (index + 1 < itemsList.size) {
-                        val coordinateStart = valueToCoordinate(iDragable.getDraggableValueWrapper().value)
-                        val coordinateEnd = valueToCoordinate(itemsList[index + 1].getDraggableValueWrapper().value)
-                        canvas.drawLine(coordinateStart,
-                                lineY,
-                                coordinateEnd,
-                                lineY, attributes.colorLineActive)
+                        val coordinateStart =
+                            valueToCoordinate(iDragable.getDraggableValueWrapper().value)
+                        val coordinateEnd =
+                            valueToCoordinate(itemsList[index + 1].getDraggableValueWrapper().value)
+                        canvas.drawLine(
+                            coordinateStart,
+                            lineY,
+                            coordinateEnd,
+                            lineY, attributes.colorLineActive
+                        )
                     }
                 }
             }
@@ -76,20 +90,21 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
     }
 
     fun valueToCoordinate(value: Float): Float {
-        val valuePercent = (value - attributes.min) * 100f / (attributes.max - attributes.min) / 100f
+        val valuePercent =
+            (value - attributes.min) * 100f / (attributes.max - attributes.min) / 100f
         return margin + (width - margin * 2) * valuePercent
     }
 
     private fun coordinateToValue(coordinate: Float): Float {
-        val MIN_AGE = attributes.min
-        val MAX_AGE = attributes.max
+        val minValue = attributes.min
+        val maxValue = attributes.max
 
         val valuePercent = (coordinate - margin) / (width - margin * 2)
-        val value = MIN_AGE + (MAX_AGE - MIN_AGE) * valuePercent
-        if (value < MIN_AGE) {
-            return MIN_AGE
-        } else if (value > MAX_AGE) {
-            return MAX_AGE
+        val value = minValue + (maxValue - minValue) * valuePercent
+        if (value < minValue) {
+            return minValue
+        } else if (value > maxValue) {
+            return maxValue
         }
         return value
     }
@@ -100,33 +115,56 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
         when {
             event.action == MotionEvent.ACTION_DOWN -> {
                 //find what value we are changing and focus on it
-                focusedDraggable = itemsList.findClosestTo(coordinateToValue(event.x), { it.getDraggableValueWrapper().value })
+                focusedDraggable = itemsList.findClosestTo(coordinateToValue(event.x)) {
+                    it.getDraggableValueWrapper().value
+                }
+                val focusedDraggable = focusedDraggable ?: return true
+                focusedDraggable.onMotionEvent(event)
                 //change focused value
                 moveItemTo(focusedDraggable, coordinateToValue(event.x))
-                if (focusedDraggable != null) {
-                    iSeekBarGestureListener?.onSeekbarItemFocused(focusedDraggable?.getTag()!!, focusedDraggable?.getDraggableValueWrapper()!!.value)
-                    iSeekBarChangeListener?.onSeekBarValueChange(focusedDraggable?.getTag()!!, focusedDraggable?.getDraggableValueWrapper()!!.value)
-                }
+                iSeekBarGestureListener?.onSeekbarItemFocused(
+                    focusedDraggable.getTag(),
+                    focusedDraggable.getDraggableValueWrapper().value
+                )
+                iSeekBarChangeListener?.onSeekBarValueChange(
+                    focusedDraggable.getTag(),
+                    focusedDraggable.getDraggableValueWrapper().value
+                )
                 invalidate()
             }
             focusedDraggable != null && event.action == MotionEvent.ACTION_MOVE -> {
+                val focusedDraggable = focusedDraggable ?: return true
+                focusedDraggable.onMotionEvent(event)
                 moveItemTo(focusedDraggable, coordinateToValue(event.x))
-                iSeekBarGestureListener?.onSeekbarItemMoved(focusedDraggable?.getTag()!!, focusedDraggable?.getDraggableValueWrapper()!!.value)
-                iSeekBarChangeListener?.onSeekBarValueChange(focusedDraggable?.getTag()!!, focusedDraggable?.getDraggableValueWrapper()!!.value)
+                iSeekBarGestureListener?.onSeekbarItemMoved(
+                    focusedDraggable.getTag(),
+                    focusedDraggable.getDraggableValueWrapper().value
+                )
+                iSeekBarChangeListener?.onSeekBarValueChange(
+                    focusedDraggable.getTag(),
+                    focusedDraggable.getDraggableValueWrapper().value
+                )
                 invalidate()
             }
             focusedDraggable != null && event.action == MotionEvent.ACTION_UP -> {
-                iSeekBarGestureListener?.onSeekbarItemReleased(focusedDraggable?.getTag()!!, focusedDraggable?.getDraggableValueWrapper()!!.value)
-                iSeekBarChangeListener?.onSeekBarValueChange(focusedDraggable?.getTag()!!, focusedDraggable?.getDraggableValueWrapper()!!.value)
-                focusedDraggable = null
+                val focusedDraggable = focusedDraggable ?: return true
+                focusedDraggable.onMotionEvent(event)
+                iSeekBarGestureListener?.onSeekbarItemReleased(
+                    focusedDraggable.getTag(),
+                    focusedDraggable.getDraggableValueWrapper().value
+                )
+                iSeekBarChangeListener?.onSeekBarValueChange(
+                    focusedDraggable.getTag(),
+                    focusedDraggable.getDraggableValueWrapper().value
+                )
+                this.focusedDraggable = null
                 return false
             }
         }
         return true
     }
 
-    open fun moveItemTo(draggable: IDragable?, nValue: Float) {
-        if (draggable == null) return
+    open fun moveItemTo(draggable: IDragable, nValue: Float) {
         val index = itemsList.indexOf(draggable)
         if (draggable.getDraggableValueWrapper().value > nValue) {
             if (index == 0) {
@@ -137,7 +175,8 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
             if (prevValue + attributes.draggableDifference < nValue) {
                 draggable.getDraggableValueWrapper().value = nValue
             } else {
-                draggable.getDraggableValueWrapper().value = prevValue + attributes.draggableDifference
+                draggable.getDraggableValueWrapper().value =
+                    prevValue + attributes.draggableDifference
             }
         } else
             if (draggable.getDraggableValueWrapper().value < nValue) {
@@ -149,7 +188,8 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
                 if (nextValue - attributes.draggableDifference > nValue) {
                     draggable.getDraggableValueWrapper().value = nValue
                 } else {
-                    draggable.getDraggableValueWrapper().value = nextValue - attributes.draggableDifference
+                    draggable.getDraggableValueWrapper().value =
+                        nextValue - attributes.draggableDifference
                 }
             }
     }
