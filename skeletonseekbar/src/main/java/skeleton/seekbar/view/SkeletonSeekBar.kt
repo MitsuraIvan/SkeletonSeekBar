@@ -32,7 +32,7 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!attributes.respectMarginToDrawInsideContainer) this.setAllParentsClip(true)
+        if (!attributes.respectMarginToDrawInsideContainer) this.setAllParentsClip(false)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
