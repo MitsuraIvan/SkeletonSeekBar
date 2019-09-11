@@ -15,7 +15,7 @@ import java.util.*
  */
 
 class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, attrs),
-    View.OnTouchListener {
+        View.OnTouchListener {
 
     val attributes: SkeletonSeekBarAttrs = SkeletonSeekBarAttrs(context, attrs)
     private val itemsList = ArrayList<IDragable>()
@@ -38,19 +38,23 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         lineY = h * attributes.gravityY
-        margin = attributes.itemW * 0.4f
+        margin = attributes.itemW * 0.5f
         invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        val viewWidth = width.toFloat()
+
+        val start = if (attributes.respectMarginToDrawInsideContainer) margin else 0f
+        val end = if (attributes.respectMarginToDrawInsideContainer) viewWidth - margin else viewWidth
 
         //unactive line drawing
         canvas.drawLine(
-            0f,
-            lineY,
-            width.toFloat(),
-            lineY, attributes.colorLineBg
+                start,
+                lineY,
+                end,
+                lineY, attributes.colorLineBg
         )
 
         //active line drawing
@@ -59,26 +63,25 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
             }
             1 -> {
                 val coordinate = valueToCoordinate(itemsList[0].getDraggableValueWrapper().value)
-                val x1 = if (attributes.respectMarginToDrawInsideContainer) margin else 0f
                 canvas.drawLine(
-                    x1,
-                    lineY,
-                    coordinate,
-                    lineY, attributes.colorLineActive
+                        start,
+                        lineY,
+                        coordinate,
+                        lineY, attributes.colorLineActive
                 )
             }
             else -> {
                 itemsList.forEachIndexed { index, iDragable ->
                     if (index + 1 < itemsList.size) {
                         val coordinateStart =
-                            valueToCoordinate(iDragable.getDraggableValueWrapper().value)
+                                valueToCoordinate(iDragable.getDraggableValueWrapper().value)
                         val coordinateEnd =
-                            valueToCoordinate(itemsList[index + 1].getDraggableValueWrapper().value)
+                                valueToCoordinate(itemsList[index + 1].getDraggableValueWrapper().value)
                         canvas.drawLine(
-                            coordinateStart,
-                            lineY,
-                            coordinateEnd,
-                            lineY, attributes.colorLineActive
+                                coordinateStart,
+                                lineY,
+                                coordinateEnd,
+                                lineY, attributes.colorLineActive
                         )
                     }
                 }
@@ -93,7 +96,7 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
 
     fun valueToCoordinate(value: Float): Float {
         val valuePercent =
-            (value - attributes.min) * 100f / (attributes.max - attributes.min) / 100f
+                (value - attributes.min) * 100f / (attributes.max - attributes.min) / 100f
         return margin + (width - margin * 2) * valuePercent
     }
 
@@ -140,12 +143,12 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
 
                     val lost = currentValue % step
                     moveItemTo(
-                        focusedDraggable,
-                        if (lost < step / 2f) {
-                            currentValue - lost
-                        } else {
-                            currentValue - lost + step
-                        }
+                            focusedDraggable,
+                            if (lost < step / 2f) {
+                                currentValue - lost
+                            } else {
+                                currentValue - lost + step
+                            }
                     )
                     invalidate()
                 }
@@ -169,7 +172,7 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
                 draggable.getDraggableValueWrapper().value = nValue
             } else {
                 draggable.getDraggableValueWrapper().value =
-                    prevValue + attributes.draggableDifference
+                        prevValue + attributes.draggableDifference
             }
         } else
             if (draggable.getDraggableValueWrapper().value < nValue) {
@@ -182,7 +185,7 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
                     draggable.getDraggableValueWrapper().value = nValue
                 } else {
                     draggable.getDraggableValueWrapper().value =
-                        nextValue - attributes.draggableDifference
+                            nextValue - attributes.draggableDifference
                 }
             }
     }

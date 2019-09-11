@@ -13,13 +13,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val seekBar = findViewById<SkeletonSeekBar>(R.id.seekbar)
+        findViewById<SkeletonSeekBar>(R.id.seekbar).apply {
+            addSlider(DraggableCircle("TAG1", 0f, Color.WHITE, true) { slider, event ->
+                Log.d(
+                        "logsystem",
+                        "slider ${slider.getDraggableValueWrapper().value}tag moved to value: $event"
+                )
+            })
+        }
 
-        seekBar.addSlider(DraggableCircle("TAG1", 0f, Color.WHITE, true) { slider, event ->
-            Log.d(
-                "logsystem",
-                "slider ${slider.getDraggableValueWrapper().value}tag moved to value: $event"
-            )
-        })
+        findViewById<SkeletonSeekBar>(R.id.seekbar2).apply {
+            addSlider(DraggableCircle("TAG1", 0f, Color.WHITE, true) { slider, event ->
+                Log.d(
+                        "logsystem",
+                        "slider ${slider.getDraggableValueWrapper().value}tag moved to value: $event"
+                )
+            })
+        }
     }
 }
