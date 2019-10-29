@@ -196,6 +196,8 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
         invalidate()
     }
 
+    open fun getSlider(tag: String): IDragable? = itemsList.find { it.getTag() == tag }
+
     open fun setSliderValue(tag: String, value: Float) {
         val slider = itemsList.find { it.getTag() == tag }
         slider?.getDraggableValueWrapper()!!.value = value
