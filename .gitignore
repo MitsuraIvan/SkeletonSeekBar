@@ -15,3 +15,5 @@ skeletonseekbar/.idea/
 skeletonseekbar/local.properties
 skeletonseekbar/gradlew.bat
 skeletonseekbar/gradlew
+
+*.xml

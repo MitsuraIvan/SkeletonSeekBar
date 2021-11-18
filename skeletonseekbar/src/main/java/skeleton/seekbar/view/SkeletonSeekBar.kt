@@ -72,18 +72,19 @@ class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, att
             }
             else -> {
                 itemsList.forEachIndexed { index, iDragable ->
-                    if (index + 1 < itemsList.size) {
-                        val coordinateStart =
-                                valueToCoordinate(iDragable.getDraggableValueWrapper().value)
-                        val coordinateEnd =
-                                valueToCoordinate(itemsList[index + 1].getDraggableValueWrapper().value)
-                        canvas.drawLine(
-                                coordinateStart,
-                                lineY,
-                                coordinateEnd,
-                                lineY, attributes.colorLineActive
-                        )
+                    val coordinateStart = valueToCoordinate(iDragable.getDraggableValueWrapper().value)
+
+                    val coordinateEnd = if (index + 1 < itemsList.size) {
+                        valueToCoordinate(itemsList[index + 1].getDraggableValueWrapper().value)
+                    } else {
+                        valueToCoordinate(itemsList[index].getDraggableValueWrapper().value)
                     }
+                    canvas.drawLine(
+                            coordinateStart,
+                            lineY,
+                            coordinateEnd,
+                            lineY, attributes.colorLineActive
+                    )
                 }
             }
         }

@@ -1,7 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.mitsuraivan'
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenCentral()
+}
 
 android {
     compileSdkVersion 27
@@ -11,6 +14,10 @@ android {
         targetSdkVersion 27
         versionCode 3
         versionName "0.2.4"
+    }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -23,7 +30,4 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
 }
