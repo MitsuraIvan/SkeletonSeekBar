@@ -13,11 +13,11 @@ android {
         minSdkVersion 14
         targetSdkVersion 30
         versionCode 3
-        versionName "0.2.8"
+        versionName "0.2.9"
     }
 
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     buildTypes {
