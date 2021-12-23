@@ -7,13 +7,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 30
         versionCode 3
-        versionName "0.2.7"
+        versionName "0.2.8"
     }
 
     compileOptions {
