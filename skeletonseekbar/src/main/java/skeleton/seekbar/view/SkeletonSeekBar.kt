@@ -10,14 +10,18 @@ import skeleton.seekbar.entity.SkeletonSeekBarAttrs
 import skeleton.seekbar.entity.draggables.SLIDER_GESTURE
 import java.util.*
 
-/**
- * Created by ivanm on 3/11/2018.
- */
+class SkeletonSeekBar : View, View.OnTouchListener {
 
-class SkeletonSeekBar(context: Context, attrs: AttributeSet) : View(context, attrs),
-        View.OnTouchListener {
+    val attributes: SkeletonSeekBarAttrs
 
-    val attributes: SkeletonSeekBarAttrs = SkeletonSeekBarAttrs(context, attrs)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        attributes = SkeletonSeekBarAttrs(context, attrs)
+    }
+
+    constructor(context: Context, attrs: SkeletonSeekBarAttrs) : super(context) {
+        attributes = attrs
+    }
+
     private val itemsList = ArrayList<IDragable>()
 
     private var focusedDraggable: IDragable? = null

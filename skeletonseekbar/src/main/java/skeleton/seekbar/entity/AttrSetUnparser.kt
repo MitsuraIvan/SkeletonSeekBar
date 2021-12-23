@@ -7,29 +7,62 @@ import android.util.AttributeSet
 import skeleton.seekbar.DpToPx
 import skeleton.seekbar.R
 
-open class SkeletonSeekBarAttrs(context: Context, val attrSet: AttributeSet) {
+open class SkeletonSeekBarAttrs {
 
-    var itemH: Int
-    var itemW: Int
+    val itemH: Int
+    val itemW: Int
 
-    var gravityY: Float
-    var colorLineBg: Paint
-    var colorLineActive: Paint
-    var min: Float
-    var max: Float
-    var step: Float
-    var draggableDifference: Float
+    val gravityY: Float
+    val min: Float
+    val max: Float
+    val step: Float
+    val draggableDifference: Float
 
     val respectMarginToDrawInsideContainer: Boolean
 
-    init {
+    val colorLineBg: Paint = Paint()
+    val colorLineActive: Paint = Paint()
+
+    constructor(
+            itemH: Int,
+            itemW: Int,
+
+            gravityY: Float,
+            min: Float,
+            max: Float,
+            step: Float,
+            draggableDifference: Float,
+
+            lineStroke: Float,
+            lineActiveStroke: Float,
+
+            lineColor: Int,
+            lineActiveColor: Int,
+
+            respectMarginToDrawInsideContainer: Boolean
+    ) {
+        this.respectMarginToDrawInsideContainer = respectMarginToDrawInsideContainer
+
+        this.itemH = itemH
+        this.itemW = itemW
+        this.gravityY = gravityY
+
+        this.colorLineBg.strokeWidth = lineStroke
+        this.colorLineBg.color = lineColor
+
+        this.colorLineActive.strokeWidth = lineActiveStroke
+        this.colorLineActive.color = lineActiveColor
+
+        this.min = min
+        this.max = max
+        this.step = step
+        this.draggableDifference = draggableDifference
+    }
+
+    constructor(context: Context, attrSet: AttributeSet) {
         val a = context.theme.obtainStyledAttributes(attrSet, R.styleable.SkeletonSeekBar, 0, 0)
         try {
-            colorLineBg = Paint()
-            colorLineActive = Paint()
-
-            respectMarginToDrawInsideContainer =
-                a.getBoolean(R.styleable.SkeletonSeekBar_respectRequiredMargin, true)
+            respectMarginToDrawInsideContainer = a.getBoolean(R.styleable.SkeletonSeekBar_respectRequiredMargin, true)
 
             itemH = a.getDimensionPixelSize(R.styleable.SkeletonSeekBar_itemH, 30.DpToPx())
             itemW = a.getDimensionPixelSize(R.styleable.SkeletonSeekBar_itemW, 30.DpToPx())
@@ -40,8 +73,7 @@ open class SkeletonSeekBarAttrs(context: Context, val attrSet: AttributeSet) {
             colorLineBg.color = a.getInteger(R.styleable.SkeletonSeekBar_colorLineBg, Color.WHITE)
 
             colorLineActive.strokeWidth = lineStroke
-            colorLineActive.color =
-                a.getInteger(R.styleable.SkeletonSeekBar_colorLineActive, Color.WHITE)
+            colorLineActive.color = a.getInteger(R.styleable.SkeletonSeekBar_colorLineActive, Color.WHITE)
 
             min = a.getFloat(R.styleable.SkeletonSeekBar_min, 0f)
             max = a.getFloat(R.styleable.SkeletonSeekBar_max, 100f)
